@@ -1,6 +1,7 @@
 package com.magnusjason.githubprstats
 
-import com.integralblue.httpresponsecache.HttpResponseCache
+import org.apache.http.impl.client.cache.CacheConfig
+import org.apache.http.impl.client.cache.CachingHttpClients
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -15,7 +16,6 @@ import java.io.File
 
 
 fun main(args : Array<String>) {
-    HttpResponseCache.install(File("httpcache"), 100 * 1024 * 1024) //100 MB
     val context = SpringApplication.run(Application::class.java, *args)
     val prs = context.getBean(PullRequestSucker::class.java)
     prs.analyzeOrg("luxbet")
@@ -32,8 +32,20 @@ open class Application : Neo4jConfiguration() {
     }
 
     @Bean
-    open fun githubClient(@Value("github.oauth.token") oauthToken: String): GitHubClient {
-        val client = RateLimitedGitHubClient()
+    open fun githubClient(@Value("\${github.oauth.token}") oauthToken: String): GitHubClient {
+        val cacheConfig = CacheConfig.custom()
+                .setMaxCacheEntries(100000)
+                .setMaxObjectSize(1024 * 1024)
+                .build()
+
+
+        val httpClient = CachingHttpClients.custom()
+                .setCacheConfig(cacheConfig)
+                .setCacheDir(File("httpcache"))
+                .build()
+
+
+        val client = HcGithubClient(httpClient)//RateLimitedGitHubClient()
         client.setOAuth2Token(oauthToken)
         return client
     }
