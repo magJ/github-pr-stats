@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories
 import org.springframework.data.neo4j.config.Neo4jConfiguration
-import java.io.File
+import java.nio.file.Paths
 
 
 fun main(args : Array<String>) {
@@ -36,12 +36,13 @@ open class Application : Neo4jConfiguration() {
         val cacheConfig = CacheConfig.custom()
                 .setMaxCacheEntries(100000)
                 .setMaxObjectSize(1024 * 1024)
+                .setSharedCache(false)
                 .build()
 
 
         val httpClient = CachingHttpClients.custom()
                 .setCacheConfig(cacheConfig)
-                .setCacheDir(File("httpcache"))
+                .setHttpCacheStorage(FileHttpCacheStorage(Paths.get("httpcache")))
                 .build()
 
 

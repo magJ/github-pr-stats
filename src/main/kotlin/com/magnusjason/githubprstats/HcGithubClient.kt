@@ -101,14 +101,14 @@ class HcGithubClient(val httpClient : CloseableHttpClient) : GitHubClient() {
 class HcGithubResponse(val httpResponse: CloseableHttpResponse, body: Any?) : GitHubResponse(null, body) {
 
     override fun getHeader(name: String?): String? {
-        return httpResponse.getFirstHeader(name).value
+        return httpResponse.getFirstHeader(name)?.value
     }
 }
 
 class MockHttpURLConnection(val httpResponse: CloseableHttpResponse) : HttpURLConnection(null) {
 
     override fun getHeaderField(name: String?): String? {
-        return httpResponse.getFirstHeader(name).value
+        return httpResponse.getFirstHeader(name)?.value
     }
 
     override fun usingProxy(): Boolean {

@@ -32,7 +32,7 @@ class PullRequestSucker(
 
     val repoService = RepositoryService(ghClient)
     val prService = PullRequestService(ghClient)
-    val executor = Executors.newFixedThreadPool(10)
+    val executor = Executors.newFixedThreadPool(1)
     val userLock = Object()
 
     fun analyzePr(repo: Repository, pr: PullRequest): PullRequestNode {
