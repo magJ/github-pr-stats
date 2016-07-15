@@ -15,8 +15,10 @@ public class CommentNode {
 
     Long number;
     Integer position;
+    Integer line;
     Long createdAt;
     Long updatedAt;
+    String path;
     String body;
 
     @RelatedTo(type="AUTHOR", direction = Direction.BOTH)

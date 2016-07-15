@@ -31,4 +31,7 @@ dependencies {
     compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
     compile "org.apache.httpcomponents:httpclient:$http_client_version"
     compile "org.apache.httpcomponents:httpclient-cache:$http_client_version"
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'com.google.jimfs:jimfs:1.1-rc1'
 }
